@@ -13,11 +13,10 @@ run:
 clean:
     rm -rf build
     rm -rf db/data/*
-    rm db/tables/*
+    rm -rf db/tables/*
 
 #Rebuild
-rebuild:
-    rm -rf build
+rebuild: clean
     mkdir -p build
     g++ -std=c++17 -Iinclude src/main.cpp -o build/main
 
