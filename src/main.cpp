@@ -22,8 +22,7 @@ int main (int argc, char *argv[]) {
     }
     column primaryKey=columns[2];
     engine db;
-    string tableName="students";
-    db.createTable(tableName,columns,primaryKey);
+    db.createTable("students",columns,primaryKey);
     return 0;
 }
 

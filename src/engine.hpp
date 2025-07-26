@@ -13,12 +13,12 @@ using namespace std;
 class engine{
     private:
 
-        bool tableExists(string &name){
+        bool tableExists(const string &name){
             filesystem::path path="db/tables/" + name + ".meta";
             return filesystem::exists(path);
         }
 
-        bool writeMeta(string &name,ofstream &file,vector<column> &columns,column &primaryKey){
+        bool writeMeta(const string &name,ofstream &file,const vector<column> &columns,const column &primaryKey){
             json j;
             j["table_name"] = name;
 
@@ -41,7 +41,7 @@ class engine{
             return true;
         }
 
-        bool createColumnFiles(string &name,vector<column> &columns){
+        bool createColumnFiles(const string &name,const vector<column> &columns){
             string path="db/data/" + name;
             error_code ec;
             filesystem::create_directory(path,ec);
@@ -57,7 +57,7 @@ class engine{
 
     public:
 
-        bool createTable(string &name,vector<column> &columns,column &primaryKey){
+        bool createTable(const string &name,const vector<column> &columns,const column &primaryKey){
             if(tableExists(name)){
                 cout<<"Table with the name "<<name<<" exists"<<endl;
                 return false;
