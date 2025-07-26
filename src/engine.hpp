@@ -41,7 +41,7 @@ class engine{
             return true;
         }
 
-        bool createColumns(string &name,vector<column> &columns){
+        bool createColumnFiles(string &name,vector<column> &columns){
             string path="db/data/" + name;
             error_code ec;
             filesystem::create_directory(path,ec);
@@ -62,13 +62,13 @@ class engine{
                 cout<<"Table with the name "<<name<<" exists"<<endl;
                 return false;
             }
-            ofstream meta(name+".meta");
+            ofstream meta("db/tables/" + name+".meta");
             if(!meta.is_open()){
                 cout<<"Failed to open file "<<name<<".meta";
                 return false;
             }
             if(writeMeta(name,meta,columns,primaryKey)){
-                return createColumns(name,columns);
+                return createColumnFiles(name,columns);
             }
             else{
                 return false;
