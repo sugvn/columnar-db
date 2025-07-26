@@ -63,7 +63,7 @@ class engine{
                     cout<<"Error opening column file"<<endl;
                     return {};
                 }
-                files.push_back(file);
+                files.push_back(std::move(file));
             }
             return files;
 
