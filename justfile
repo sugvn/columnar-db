@@ -12,6 +12,8 @@ run:
 # Clean build files
 clean:
     rm -rf build
+    rm -rf db/data/*
+    rm db/tables/*
 
 #Rebuild
 rebuild:
