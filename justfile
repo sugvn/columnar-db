@@ -3,7 +3,7 @@
 # Compile and build the project
 build:
     mkdir -p build
-    g++ -std=c++17 -Iinclude src/*.cpp -o build/main
+    g++ -std=c++17 -Iinclude src/main.cpp -o build/main
 
 # Run the executable
 run:
