@@ -55,6 +55,20 @@ class engine{
             return true;
         }
 
+        vector<ofstream> openColumnFiles(const string &tableName,const vector<column> &columns){
+            vector<ofstream> files;
+            for(const auto &col:columns){
+                ofstream file("db/data/" + tableName + "/" + col.name + ".bin");
+                if(!file.is_open()){
+                    cout<<"Error opening column file"<<endl;
+                    return {};
+                }
+                files.push_back(file);
+            }
+            return files;
+
+        }
+
     public:
 
         bool createTable(const string &name,const vector<column> &columns,const column &primaryKey){
@@ -75,4 +89,26 @@ class engine{
             }
 
         }
+        
+       bool insertIntoTable(const string &name,const vector<string> &vec){
+        if(!tableExists(name)){
+            cout<<"Table does not exist";
+            return false;
+        } 
+        ifstream file("db/tables" + name + ".meta");
+        json j;
+        if(!file.is_open()){
+            cout<<"Error opening file for inserting";
+            return false;
+        }
+        file>>j;
+        vector<column> columns;
+        for(const auto& col:j["columns"]){
+            columns.push_back(column(col["name"],col["type"],col["is_indexed"]));
+        }
+        const vector<ofstream> &files=openColumnFiles(name,columns);
+        if(!files.size()){
+            return false;
+        }
+    } 
 };
