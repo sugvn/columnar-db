@@ -1,0 +1,9 @@
+{
+  "table": "users",
+  "primary_key": "id",
+  "columns": [
+    { "name": "id", "type": "int", "size": 4, "is_indexed": true },
+    { "name": "username", "type": "string", "size": 15, "is_indexed": false },
+    { "name": "is_admin", "type": "bool", "size": 1, "is_indexed": false }
+  ]
+}
