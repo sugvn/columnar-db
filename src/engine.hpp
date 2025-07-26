@@ -18,7 +18,7 @@ class engine{
             return filesystem::exists(path);
         }
 
-        bool writeMeta(string name,ofstream &file,vector<column> columns,column primaryKey){
+        bool writeMeta(string &name,ofstream &file,vector<column> &columns,column &primaryKey){
             json j;
             j["table_name"] = name;
 
@@ -57,7 +57,7 @@ class engine{
 
     public:
 
-        bool createTable(string name,vector<column> columns,column primaryKey){
+        bool createTable(string &name,vector<column> &columns,column &primaryKey){
             if(tableExists(name)){
                 cout<<"Table with the name "<<name<<" exists"<<endl;
                 return false;
