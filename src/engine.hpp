@@ -3,12 +3,14 @@
 #include <iostream>
 #include <system_error>
 #include <vector>
+#include <variant>
 #include <fstream>
 #include <filesystem>
 #include "column.hpp"
 #include "json.hpp"
 using json=nlohmann::json;
 using namespace std;
+
 
 class engine{
     private:
@@ -17,6 +19,10 @@ class engine{
             filesystem::path path="db/tables/" + name + ".meta";
             return filesystem::exists(path);
         }
+        
+    ofstream openMetaFile(const string &name){
+        if(tableExists(name)){}
+    }
 
         bool writeMeta(const string &name,ofstream &file,const vector<column> &columns,const column &primaryKey){
             json j;
@@ -89,26 +95,8 @@ class engine{
             }
 
         }
+    bool insertIntoTable(const string &name,const vector<variant<int,bool,string>> &vec){
+        return false;
+    }
         
-       bool insertIntoTable(const string &name,const vector<string> &vec){
-        if(!tableExists(name)){
-            cout<<"Table does not exist";
-            return false;
-        } 
-        ifstream file("db/tables" + name + ".meta");
-        json j;
-        if(!file.is_open()){
-            cout<<"Error opening file for inserting";
-            return false;
-        }
-        file>>j;
-        vector<column> columns;
-        for(const auto& col:j["columns"]){
-            columns.push_back(column(col["name"],col["type"],col["is_indexed"]));
-        }
-        const vector<ofstream> &files=openColumnFiles(name,columns);
-        if(!files.size()){
-            return false;
-        }
-    } 
 };
