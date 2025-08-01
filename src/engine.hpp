@@ -96,6 +96,12 @@ class engine{
 
         }
     bool insertIntoTable(const string &name,const vector<variant<int,bool,string>> &vec){
+        if(!tableExists(name)){
+            cout<<"Table doesnt exist for inserting";
+            return false;
+        }
+        for(auto v:vec){
+        }
         return false;
     }
         
