@@ -1,108 +1,118 @@
 #pragma once
-#include <string>
-#include <iostream>
-#include <system_error>
-#include <vector>
-#include <variant>
-#include <fstream>
-#include <filesystem>
 #include "column.hpp"
 #include "json.hpp"
-using json=nlohmann::json;
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <system_error>
+#include <variant>
+#include <vector>
+using json = nlohmann::json;
 using namespace std;
 
+class engine {
+private:
+  bool tableExists(const string &name) {
+    filesystem::path path = "db/tables/" + name + ".meta";
+    return filesystem::exists(path);
+  }
 
-class engine{
-    private:
+  bool openMetaFile(const string &name, fstream &file) {
+    if (file.is_open()) {
+      cout << "A file is already opened";
+      return false;
+    }
+    if (!tableExists(name)) {
+      return false;
+    }
+    file.open("db/tables/" + name + ".meta", ios::app | ios::in);
+    if (!file.is_open()) {
+      return false;
+    }
+    return true;
+  }
 
-        bool tableExists(const string &name){
-            filesystem::path path="db/tables/" + name + ".meta";
-            return filesystem::exists(path);
-        }
-        
-    ofstream openMetaFile(const string &name){
-        if(tableExists(name)){}
+  bool writeMeta(const string &name, ofstream &file,
+                 const vector<column> &columns, const column &primaryKey) {
+    json j;
+    j["table_name"] = name;
+
+    for (auto &col : columns) {
+      bool is_primary = (col.name == primaryKey.name);
+      j["columns"].push_back(
+          {{"name", col.name},
+           {"type", col.type},
+           {"size", col.size},
+           {"is_indexed", is_primary ? true : col.is_indexed}});
     }
 
-        bool writeMeta(const string &name,ofstream &file,const vector<column> &columns,const column &primaryKey){
-            json j;
-            j["table_name"] = name;
+    j["primary_key"] = primaryKey.name;
 
-            for (auto &col : columns) {
-                bool is_primary = (col.name == primaryKey.name);
-                j["columns"].push_back({
-                    {"name", col.name},
-                    {"type", col.type},
-                    {"size", col.size},
-                    {"is_indexed", is_primary ? true : col.is_indexed}
-                });
-            }
+    if (!file.is_open())
+      return false;
 
-            j["primary_key"] = primaryKey.name;
+    file << j.dump(4);
+    file.close();
+    return true;
+  }
 
-            if (!file.is_open()) return false;
-
-            file << j.dump(4);
-            file.close();
-            return true;
-        }
-
-        bool createColumnFiles(const string &name,const vector<column> &columns){
-            string path="db/data/" + name;
-            error_code ec;
-            filesystem::create_directory(path,ec);
-            if(ec) return false;
-            for (auto &col : columns) {
-                string filePath = path + "/" + col.name + ".bin";
-                std::ofstream file(filePath, std::ios::binary);
-                if (!file.is_open()) return false;
-                file.close();
-            }
-            return true;
-        }
-
-        vector<ofstream> openColumnFiles(const string &tableName,const vector<column> &columns){
-            vector<ofstream> files;
-            for(const auto &col:columns){
-                ofstream file("db/data/" + tableName + "/" + col.name + ".bin");
-                if(!file.is_open()){
-                    cout<<"Error opening column file"<<endl;
-                    return {};
-                }
-                files.push_back(std::move(file));
-            }
-            return files;
-
-        }
-
-    public:
-
-        bool createTable(const string &name,const vector<column> &columns,const column &primaryKey){
-            if(tableExists(name)){
-                cout<<"Table with the name "<<name<<" exists"<<endl;
-                return false;
-            }
-            ofstream meta("db/tables/" + name+".meta");
-            if(!meta.is_open()){
-                cout<<"Failed to open file "<<name<<".meta";
-                return false;
-            }
-            if(writeMeta(name,meta,columns,primaryKey)){
-                return createColumnFiles(name,columns);
-            }
-            else{
-                return false;
-            }
-
-        }
-    bool insertIntoTable(const string &name,const vector<variant<int,bool,string>> &vec){
-        if(!tableExists(name)){
-            cout<<"Table doesnt exist for inserting";
-            return false;
-        }
-        for(auto v:vec){
-        }
+  bool createColumnFiles(const string &name, const vector<column> &columns) {
+    string path = "db/data/" + name;
+    error_code ec;
+    filesystem::create_directory(path, ec);
+    if (ec)
+      return false;
+    for (auto &col : columns) {
+      string filePath = path + "/" + col.name + ".bin";
+      std::ofstream file(filePath, std::ios::binary);
+      if (!file.is_open())
         return false;
+      file.close();
     }
-        
+    return true;
+  }
+
+  vector<ofstream> openColumnFiles(const string &tableName,
+                                   const vector<column> &columns) {
+    vector<ofstream> files;
+    for (const auto &col : columns) {
+      ofstream file("db/data/" + tableName + "/" + col.name + ".bin");
+      if (!file.is_open()) {
+        cout << "Error opening column file" << endl;
+        return {};
+      }
+      files.push_back(std::move(file));
+    }
+    return files;
+  }
+
+public:
+  bool createTable(const string &name, const vector<column> &columns,
+                   const column &primaryKey) {
+    if (tableExists(name)) {
+      cout << "Table with the name " << name << " exists" << endl;
+      return false;
+    }
+    ofstream meta("db/tables/" + name + ".meta");
+    if (!meta.is_open()) {
+      cout << "Failed to open file " << name << ".meta";
+      return false;
+    }
+    if (writeMeta(name, meta, columns, primaryKey)) {
+      return createColumnFiles(name, columns);
+    } else {
+      return false;
+    }
+  }
+  bool insertIntoTable(const string &name,
+                       const vector<variant<int, bool, string>> &vec) {
+    if (!tableExists(name)) {
+      cout << "Table doesnt exist for inserting";
+      return false;
+    }
+    for (auto v : vec) {
+    }
+    return false;
+  }
 };
