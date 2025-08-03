@@ -14,7 +14,8 @@ using namespace std;
 class engine {
 private:
   bool tableExists(const string &name) {
-    filesystem::path path = "db/tables/" + name + ".meta";
+    // filesystem::path path = "db/tables/" + name + ".meta";
+    filesystem::path path=filesystem::path("db")/"tables"/(name + ".meta");
     return filesystem::exists(path);
   }
 
@@ -36,9 +37,6 @@ private:
   bool writeMeta(const string &name, const vector<column> &columns,
                  const column &primaryKey) {
 
-
-    fstream file;
-    if(!openMetaFile(name,file)) return false;
     json j;
     j["table_name"] = name;
 
@@ -53,7 +51,7 @@ private:
 
     j["primary_key"] = primaryKey.name;
     fstream file;
-    openMetaFile(name,file);
+    if(!openMetaFile(name,file)) return false;
     file << j.dump(4);
     file.close();
     return true;
