@@ -18,7 +18,7 @@ int main (int argc, char *argv[]) {
 
         cout << "  Is Indexed (0 or 1): ";
         cin >> is_indexed;
-        columns.push_back(column(name,type,is_indexed));
+        columns.push_back(column(name,stringToType(type),is_indexed));
     }
     column primaryKey=columns[2];
     engine db;
