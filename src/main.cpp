@@ -21,7 +21,9 @@ int main (int argc, char *argv[]) {
         columns.push_back(column(name,type,is_indexed));
     }
     Engine db;
-    db.createTable("students",columns,columns[2]);
+    if(db.createTable("students",columns,columns[2])){ 
+        cout<<"Failed to create Column files"<<endl;
+    }
     return 0;
 }
 
