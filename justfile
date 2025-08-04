@@ -3,7 +3,7 @@
 # Compile and build the project
 build:
     mkdir -p build
-    g++ -std=c++17 -Iinclude src/main.cpp -o build/main
+    g++ -std=c++17 -Iinclude src/main.cpp src/engine.cpp -o build/main
 
 # Run the executable
 run:
@@ -18,5 +18,5 @@ clean:
 #Rebuild
 rebuild: clean
     mkdir -p build
-    g++ -std=c++17 -Iinclude src/main.cpp -o build/main
+    g++ -std=c++17 -Iinclude src/main.cpp src/engine.cpp -o build/main
 
