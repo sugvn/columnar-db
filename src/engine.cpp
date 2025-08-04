@@ -106,6 +106,17 @@ bool Engine::createMetaFile(const string &name) {
   return true;
 }
 
+bool Engine::loadColumns(const string &name, vector<column> &columns) {
+  fstream file;
+  if (!openMetaFile(name, file))
+    return false;
+  json j;
+  file >> j;
+cout<<j["table_name"];
+    return true;
+
+}
+
 // Public functions
 
 bool Engine::createTable(const string &name, const vector<column> &columns,

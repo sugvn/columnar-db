@@ -18,6 +18,9 @@ private:
 
   bool openColumnFiles(const string &tableName,vector<fstream> &files,const vector<column> &cols);
 
+
+    bool loadColumns(const string &name,vector<column> &columns);
+
 public:
   bool createTable(const string &name, const vector<column> &columns,
                    const column &primaryKey) ;
