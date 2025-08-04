@@ -16,8 +16,7 @@ private:
   bool createColumnFiles(const string &name, const vector<column> &columns);
   bool createMetaFile(const string &name);
 
-  vector<ofstream> openColumnFiles(const string &tableName,
-                                   const vector<column> &columns);
+  bool openColumnFiles(const string &tableName,vector<fstream> &files,const vector<column> &cols);
 
 public:
   bool createTable(const string &name, const vector<column> &columns,

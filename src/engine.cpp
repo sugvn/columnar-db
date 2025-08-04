@@ -62,52 +62,72 @@ bool Engine::writeMeta(const string &name, const vector<column> &columns) {
 bool Engine::createColumnFiles(const string &name,
                                const vector<column> &columns) {
   // string path = "db/data/" + name;
-filesystem::path path=filesystem::path("db")/"data"/name;
+  filesystem::path path = filesystem::path("db") / "data" / name;
   error_code ec;
   filesystem::create_directory(path, ec);
   if (ec)
     return false;
   for (auto &col : columns) {
-        filesystem::path filePath = path/(col.name + ".bin");
+    filesystem::path filePath = path / (col.name + ".bin");
     std::ofstream file(filePath, std::ios::binary);
-    if (!file.is_open())
+    if (!file.is_open()) {
+      cout << "Error creating column file:" << col.name << ".col" << endl;
       return false;
+    }
     file.close();
   }
   return true;
 }
 
-vector<ofstream> Engine::openColumnFiles(const string &tableName,
-                                         const vector<column> &columns) {
-  vector<ofstream> files;
-  for (const auto &col : columns) {
-    ofstream file("db/data/" + tableName + "/" + col.name + ".bin");
-    if (!file.is_open()) {
-      cout << "Error opening column file" << endl;
-      return {};
-    }
-    files.push_back(std::move(file));
-  }
-  return files;
-}
+// vector<ofstream> Engine::openColumnFiles(const string &tableName,
+//                                          const vector<column> &columns) {
+//   vector<ofstream> files;
+//   for (const auto &col : columns) {
+//     ofstream file("db/data/" + tableName + "/" + col.name + ".bin");
+//     if (!file.is_open()) {
+//       cout << "Error opening column file" << endl;
+//       return {};
+//     }
+//     files.push_back(std::move(file));
+//   }
+//   return files;
+// }
 
-bool Engine::createMetaFile(const string &name){
+bool Engine::openColumnFiles(const string &name,vector<fstream> &files,const vector<column> &columns){
     if(!tableExists(name)) return false;
-    ofstream file(filesystem::path("db")/"tables"/(name+".meta"));
-    if(!file.is_open()) return false;
-    file.close();
+    filesystem::path tableDir=filesystem::path("db")/"data"/name;
+    fstream file;
+    for(auto &col:columns){
+        filesystem::path fileName=tableDir/(col.name + ".col");
+        file.open(fileName,ios::app | ios::binary);
+        if(!file.is_open()) return false;
+        files.push_back(file);
+        file.close();
+    }
     return true;
 }
 
+
+
+bool Engine::createMetaFile(const string &name) {
+  if (!tableExists(name))
+    return false;
+  ofstream file(filesystem::path("db") / "tables" / (name + ".meta"));
+  if (!file.is_open())
+    return false;
+  file.close();
+  return true;
+}
 
 // Public functions
 
 bool Engine::createTable(const string &name, const vector<column> &columns,
                          const column &primaryKey) {
   // check if a table with that name already exists
-  if(!createMetaFile(name)) return false;
+  if (!createMetaFile(name))
+    return false;
   // writing the metadata
-  if (!writeMeta(name,columns)) {
+  if (!writeMeta(name, columns)) {
     cout << "Failed to write metadata for " << name << ".meta file" << endl;
     return false;
   }
