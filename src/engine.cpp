@@ -17,10 +17,12 @@ bool Engine::openMetaFile(const string &name, fstream &file) {
     return false;
   }
   if (!tableExists(name)) {
+    cout<<"Table doesnt exist";
     return false;
   }
   file.open("db/tables/" + name + ".meta", ios::app | ios::in);
   if (!file.is_open()) {
+    cout << "Cannot open file in openMetaFile fn";
     return false;
   }
   return true;
@@ -53,8 +55,10 @@ bool Engine::writeMeta(const string &name, const vector<column> &columns) {
   if (!openMetaFile(name, file))
     return false;
   file << j.dump(4);
-  if (file.fail())
+  if (file.fail()) {
+    cout << "Failed to write json data to file";
     return false;
+  }
   file.close();
   return true;
 }
@@ -65,8 +69,10 @@ bool Engine::createColumnFiles(const string &name,
   filesystem::path path = filesystem::path("db") / "data" / name;
   error_code ec;
   filesystem::create_directory(path, ec);
-  if (ec)
+  if (ec) {
+    cout << "Some error while creating directory"<<endl;
     return false;
+  }
   for (auto &col : columns) {
     filesystem::path filePath = path / (col.name + ".bin");
     std::ofstream file(filePath, std::ios::binary);
@@ -97,11 +103,15 @@ bool Engine::createColumnFiles(const string &name,
 // }
 
 bool Engine::createMetaFile(const string &name) {
-  if (!tableExists(name))
+  if (tableExists(name)) {
+    cout << "Table with the name:" << name << " already exists" << endl;
     return false;
+  }
   ofstream file(filesystem::path("db") / "tables" / (name + ".meta"));
-  if (!file.is_open())
+  if (!file.is_open()) {
+    cout << "Cannot open file in createMetaFile fn()";
     return false;
+  }
   file.close();
   return true;
 }
@@ -112,9 +122,8 @@ bool Engine::loadColumns(const string &name, vector<column> &columns) {
     return false;
   json j;
   file >> j;
-cout<<j["table_name"];
-    return true;
-
+  cout << j["table_name"];
+  return true;
 }
 
 // Public functions
@@ -135,7 +144,7 @@ bool Engine::createTable(const string &name, const vector<column> &columns,
 
 bool Engine::insertIntoTable(const string &name,
                              const vector<variant<int, bool, string>> &vec) {
-  if (!tableExists(name)) {
+  if (tableExists(name)) {
     cout << "Table doesnt exist for inserting";
     return false;
   }
