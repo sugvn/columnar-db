@@ -79,20 +79,6 @@ bool Engine::createColumnFiles(const string &name,
   return true;
 }
 
-// vector<ofstream> Engine::openColumnFiles(const string &tableName,
-//                                          const vector<column> &columns) {
-//   vector<ofstream> files;
-//   for (const auto &col : columns) {
-//     ofstream file("db/data/" + tableName + "/" + col.name + ".bin");
-//     if (!file.is_open()) {
-//       cout << "Error opening column file" << endl;
-//       return {};
-//     }
-//     files.push_back(std::move(file));
-//   }
-//   return files;
-// }
-
 bool Engine::openColumnFiles(const string &name, vector<fstream> &files,
                              const vector<column> &columns) {
   if (!tableExists(name))
