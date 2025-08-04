@@ -79,22 +79,22 @@ bool Engine::createColumnFiles(const string &name,
   return true;
 }
 
-bool Engine::openColumnFiles(const string &name, vector<fstream> &files,
-                             const vector<column> &columns) {
-  if (!tableExists(name))
-    return false;
-  filesystem::path tableDir = filesystem::path("db") / "data" / name;
-  fstream file;
-  for (auto &col : columns) {
-    filesystem::path fileName = tableDir / (col.name + ".col");
-    file.open(fileName, ios::app | ios::binary);
-    if (!file.is_open())
-      return false;
-    files.push_back(file);
-    file.close();
-  }
-  return true;
-}
+// bool Engine::openColumnFiles(const string &name, vector<fstream> &files,
+//                              const vector<column> &columns) {
+//   if (!tableExists(name))
+//     return false;
+//   filesystem::path tableDir = filesystem::path("db") / "data" / name;
+//   fstream file;
+//   for (auto &col : columns) {
+//     filesystem::path fileName = tableDir / (col.name + ".col");
+//     file.open(fileName, ios::app | ios::binary);
+//     if (!file.is_open())
+//       return false;
+//     files.push_back(file);
+//     file.close();
+//   }
+//   return true;
+// }
 
 bool Engine::createMetaFile(const string &name) {
   if (!tableExists(name))
