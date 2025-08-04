@@ -61,13 +61,14 @@ bool Engine::writeMeta(const string &name, const vector<column> &columns) {
 
 bool Engine::createColumnFiles(const string &name,
                                const vector<column> &columns) {
-  string path = "db/data/" + name;
+  // string path = "db/data/" + name;
+filesystem::path path=filesystem::path("db")/"data"/name;
   error_code ec;
   filesystem::create_directory(path, ec);
   if (ec)
     return false;
   for (auto &col : columns) {
-    string filePath = path + "/" + col.name + ".bin";
+        filesystem::path filePath = path/(col.name + ".bin");
     std::ofstream file(filePath, std::ios::binary);
     if (!file.is_open())
       return false;
