@@ -17,7 +17,7 @@ bool Engine::openMetaFile(const string &name, fstream &file) {
     return false;
   }
   if (!tableExists(name)) {
-    cout<<"Table doesnt exist";
+    cout << "Table doesnt exist";
     return false;
   }
   file.open("db/tables/" + name + ".meta", ios::app | ios::in);
@@ -70,7 +70,7 @@ bool Engine::createColumnFiles(const string &name,
   error_code ec;
   filesystem::create_directory(path, ec);
   if (ec) {
-    cout << "Some error while creating directory"<<endl;
+    cout << "Some error while creating directory" << endl;
     return false;
   }
   for (auto &col : columns) {
@@ -123,6 +123,8 @@ bool Engine::loadColumns(const string &name, vector<column> &columns) {
   json j;
   file >> j;
   cout << j["table_name"];
+  cout << endl;
+  cout << j;
   return true;
 }
 
@@ -142,8 +144,7 @@ bool Engine::createTable(const string &name, const vector<column> &columns,
   return createColumnFiles(name, columns);
 }
 
-bool Engine::insertIntoTable(const string &name,
-                             const vector<variant<int, bool, string>> &vec) {
+bool Engine::insertIntoTable(const string &name, const vector<string> &vec) {
   if (tableExists(name)) {
     cout << "Table doesnt exist for inserting";
     return false;
