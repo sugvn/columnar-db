@@ -1,7 +1,10 @@
+#include "Result.hpp"
 #include "json.hpp"
 #include <engine.hpp>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <utility>
 using json = nlohmann::json;
 
 // Private Helper functions
@@ -11,21 +14,14 @@ bool Engine::tableExists(const string &name) {
   return filesystem::exists(path);
 }
 
-bool Engine::openMetaFile(const string &name, fstream &file) {
-  if (file.is_open()) {
-    cout << "A file is already opened";
-    return false;
-  }
-  if (!tableExists(name)) {
-    cout << "Table doesnt exist";
-    return false;
-  }
-  file.open("db/tables/" + name + ".meta", ios::app | ios::in);
-  if (!file.is_open()) {
-    cout << "Cannot open file in openMetaFile fn";
-    return false;
-  }
-  return true;
+Res<fstream> Engine::openMetaFile(const string &name) {
+  filesystem::path path = filesystem::path("db") / "tables" / (name + ".meta");
+  fstream file = fstream(path, ios::in | ios::out);
+
+  if (!file.is_open())
+    return {std::move(file), "Opening File Failed"};
+
+  return {std::move(file)};
 }
 
 bool Engine::writeMeta(const string &name, const vector<column> &columns) {
