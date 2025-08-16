@@ -98,18 +98,13 @@ bool Engine::createColumnFiles(const string &name,
 //   return true;
 // }
 
-bool Engine::createMetaFile(const string &name) {
-  if (tableExists(name)) {
-    cout << "Table with the name:" << name << " already exists" << endl;
-    return false;
-  }
+Res<None> Engine::createMetaFile(const string &name) {
   ofstream file(filesystem::path("db") / "tables" / (name + ".meta"));
   if (!file.is_open()) {
-    cout << "Cannot open file in createMetaFile fn()";
-    return false;
+    return {None{}, "Failed Creating file"};
   }
   file.close();
-  return true;
+  return {None{}};
 }
 
 bool Engine::loadColumns(const string &name, vector<column> &columns) {

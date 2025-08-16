@@ -13,11 +13,11 @@ class Engine {
 
 private:
   // general helper
-  bool tableExists(const string &name);
+  bool tableExists(const string &name); //done
 
   // MetaFile utilities
-  Res<None> createMetaFile(const string &name);
-  Res<fstream> openMetaFile(const string &name);
+  Res<None> createMetaFile(const string &name); //done
+  Res<fstream> openMetaFile(const string &name); //done
   Res<None> writeMeta(fstream &file, const vector<Column> &columns);
 
   // Column(.col) files utilities
