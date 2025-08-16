@@ -24,8 +24,10 @@ private:
   Res<None> createColumnFiles(const string &name,const vector<Column> &columns);
   Res<vector<fstream>> openColumnFiles(const string &tableName,const vector<Column> &cols);
 
+  //idk what to do with this
+  bool loadColumns(const string &name, vector<Column> &columns);
+
 public:
   bool createTable(const string &name, const vector<Column> &columns,const Column &primaryKey);
-  bool loadColumns(const string &name, vector<Column> &columns);
   bool insertIntoTable(const string &name, const vector<string> &vec);
 };
