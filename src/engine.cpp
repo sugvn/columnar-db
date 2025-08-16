@@ -3,6 +3,7 @@
 #include <engine.hpp>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <utility>
 using json = nlohmann::json;
@@ -24,7 +25,7 @@ Res<fstream> Engine::openMetaFile(const string &name) {
   return {std::move(file)};
 }
 
-bool Engine::writeMeta(const string &name, const vector<column> &columns) {
+Res<None> Engine::writeMeta(const string &name, const vector<Column> &columns) {
 
   json j;
   bool isPrimaryKeySet = false;
@@ -39,24 +40,22 @@ bool Engine::writeMeta(const string &name, const vector<column> &columns) {
                             {"is_primary_key", col.isPrimaryKey}});
     if (col.isPrimaryKey) {
       if (isPrimaryKeySet) {
-        cout << "Only one Primary key accepted";
-        return false;
+        return {None{}, "More than 1 primary key given"};
       }
       isPrimaryKeySet = true;
       j["primary_key"] = col.name;
     }
   }
 
-  fstream file;
-  if (!openMetaFile(name, file))
-    return false;
+  auto [file, err] = openMetaFile(name);
+  if (err)
+    return {None{}, err.msg};
+
   file << j.dump(4);
-  if (file.fail()) {
-    cout << "Failed to write json data to file";
-    return false;
-  }
+  if (file.fail())
+    return {None{}, "Failed writing json data to file"};
   file.close();
-  return true;
+  return {None{}};
 }
 
 bool Engine::createColumnFiles(const string &name,

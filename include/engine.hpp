@@ -18,7 +18,7 @@ private:
   // MetaFile utilities
   Res<None> createMetaFile(const string &name); //done
   Res<fstream> openMetaFile(const string &name); //done
-  Res<None> writeMeta(fstream &file, const vector<Column> &columns);
+  Res<None> writeMeta(const string &name, const vector<Column> &columns);
 
   // Column(.col) files utilities
   Res<None> createColumnFiles(const string &name,const vector<Column> &columns);
