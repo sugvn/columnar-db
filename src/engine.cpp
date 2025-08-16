@@ -3,16 +3,26 @@
 #include <engine.hpp>
 #include <filesystem>
 #include <fstream>
-#include <functional>
 #include <iostream>
 #include <utility>
 using json = nlohmann::json;
 
 // Private Helper functions
 
+//metafile utilities
+
 bool Engine::tableExists(const string &name) {
   filesystem::path path = filesystem::path("db") / "tables" / (name + ".meta");
   return filesystem::exists(path);
+}
+
+Res<None> Engine::createMetaFile(const string &name) {
+  ofstream file(filesystem::path("db") / "tables" / (name + ".meta"));
+  if (!file.is_open()) {
+    return {None{}, "Failed Creating file"};
+  }
+  file.close();
+  return {None{}};
 }
 
 Res<fstream> Engine::openMetaFile(const string &name) {
@@ -97,14 +107,6 @@ bool Engine::createColumnFiles(const string &name,
 //   return true;
 // }
 
-Res<None> Engine::createMetaFile(const string &name) {
-  ofstream file(filesystem::path("db") / "tables" / (name + ".meta"));
-  if (!file.is_open()) {
-    return {None{}, "Failed Creating file"};
-  }
-  file.close();
-  return {None{}};
-}
 
 bool Engine::loadColumns(const string &name, vector<column> &columns) {
   fstream file;
