@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 // Private Helper functions
 
-//metafile utilities
+// metafile utilities
 
 bool Engine::tableExists(const string &name) {
   filesystem::path path = filesystem::path("db") / "tables" / (name + ".meta");
@@ -48,10 +48,10 @@ Res<None> Engine::writeMeta(const string &name, const vector<Column> &columns) {
                             {"is_indexed", col.isIndexed},
                             {"is_unique", col.isUnique},
                             {"is_primary_key", col.isPrimaryKey}});
+    if (isPrimaryKeySet) {
+      return {None{}, "More than 1 primary key given"};
+    }
     if (col.isPrimaryKey) {
-      if (isPrimaryKeySet) {
-        return {None{}, "More than 1 primary key given"};
-      }
       isPrimaryKeySet = true;
       j["primary_key"] = col.name;
     }
@@ -106,7 +106,6 @@ bool Engine::createColumnFiles(const string &name,
 //   }
 //   return true;
 // }
-
 
 bool Engine::loadColumns(const string &name, vector<column> &columns) {
   fstream file;
