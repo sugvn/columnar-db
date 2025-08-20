@@ -168,3 +168,10 @@ long parallel_sum(const std::vector<int>& col) {
 * Vectorized execution for queries.
 * Support for SQL‑like query parsing.
 
+---
+
+### Note
+The code snippets in this document are provided for **conceptual clarity** and to illustrate the design philosophy of the project.  
+They should not be interpreted as complete or production-ready implementations.  
+The finalized source code within the repository may differ in structure, optimization, and detail to ensure robustness and efficiency.
+
