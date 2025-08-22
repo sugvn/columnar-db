@@ -14,4 +14,5 @@ template <typename T> struct Res {
         Err e;
         Res(T v) : value(v), e() {}
         Res(T v, const std::string &s) : value(v), e(true, s) {}
+        Res(const Err& err):e(err){}
 };
