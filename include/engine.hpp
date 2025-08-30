@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
-#include <column>
+#include <vector>
+#include "column.hpp"
 
 class StorageEngine {
       public:
-        void createTable(std::string name, const vector<Column> &columns) {
+        void createTable(std::string name, const std::vector<Column> &columns) {
                 return;
         }
 };
