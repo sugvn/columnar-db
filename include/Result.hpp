@@ -6,6 +6,7 @@ struct Err {
         std::string msg;
         Err() : status(false), msg() {};
         Err(bool s, const std::string &m) : status(s), msg(m) {}
+        Err(const std::string &m) : status(true), msg(m) {}
         explicit operator bool() const { return status; }
 };
 
