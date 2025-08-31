@@ -22,7 +22,9 @@ This document defines the scope, features, and constraints of the in‑memory co
 struct Column {
     std::string name;
     std::string type; // e.g., "int", "float", "string"
-    std::vector<std::string> data;
+    std::string tableName;
+    bool isNull;
+    int size; //size=sizeof(type)
 };
 ```
 
