@@ -6,6 +6,7 @@
 // maybe extended......maybee
 
 enum ColumnType { INT, STRING, BOOL };
+const int sizeOfColumn[3]={4,15,1};
 
 // class Column that represents a column of a table in memory
 // The constructor takes a tableName:string,name:string,type:ColumnType,isNull:bool
@@ -19,10 +20,11 @@ class Column {
         std::string name;
         bool isNull;
         ColumnType type;
+        int size;
 
       public:
         Column() = default;
         Column(const std::string &tableName, const std::string &name,
                ColumnType type, bool isNull)
-            : tableName(tableName), name(name), type(type), isNull(isNull) {}
+            : tableName(tableName), name(name), type(type), isNull(isNull), size(sizeOfColumn[type]) {}
 };
