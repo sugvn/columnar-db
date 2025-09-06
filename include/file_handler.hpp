@@ -1,8 +1,10 @@
 #pragma once
 #include <Result.hpp>
 #include <algorithm>
+#include <expected>
 #include <fstream>
 #include <ios>
+#include <string>
 
 enum fileType { META, COL };
 

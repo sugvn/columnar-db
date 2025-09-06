@@ -5,7 +5,5 @@
 
 class StorageEngine {
       public:
-        void createTable(std::string name, const std::vector<Column> &columns) {
-                return;
-        }
+        void createTable(std::string name, const std::vector<Column> &columns);
 };
