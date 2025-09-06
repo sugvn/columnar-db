@@ -1,27 +1,34 @@
 #pragma once
-#include <Result.hpp>
 #include <algorithm>
 #include <expected>
+#include <filesystem>
 #include <fstream>
 #include <ios>
 #include <string>
 
-enum fileType { META, COL };
+// Custom return types for easier error handling
+template <typename T> using Res = std::expected<T, std::string>;
+using Err = std::unexpected<std::string>;
 
 class fileHandler {
       public:
-        Res<std::fstream> openFile(std::string name, fileType ft) {
+        Res<void> createFile(std::filesystem::path path) {
+                if(std::filesystem::exists(path)){
+                        return Err("File already exists");
+                }
+                std::fstream file=std::fstream(path,std::ios::in | std::ios::out);
+                if(!file.is_open()){
+                        return Err("Error opening file");
+                }
+                file.close();
+                return {};
+        }
+
+        Res<std::fstream> openMetaFile(std::filesystem::path path) {
                 std::fstream file;
-                if (ft == fileType::META) {
-                        name += ".meta";
-                        // opening here to decide whether to open as binary or not
-                        file.open(name, std::ios::in | std::ios::out);
-                } else if (ft == fileType::COL) {
-                        name += ".col";
-                        // opening here to decide whether to open as binary or not
-                        file.open(name, std::ios::in | std::ios::out | std::ios::binary);
-                } else {
-                        return Err("Invalid filetype");
+                file.open(path, std::ios::in | std::ios::out | std::ios::app);
+                if(!file.is_open()){
+                        return Err("Cannot open file");
                 }
                 return std::move(file);
         }

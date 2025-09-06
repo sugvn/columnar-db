@@ -11,7 +11,7 @@ const int sizeOfColumn[3]={4,15,1};
 // class Column that represents a column of a table in memory
 // The constructor takes a tableName:string,name:string,type:ColumnType,isNull:bool
 // The passing of ColumnType and not a string(eg:"int","bool","string") as a
-// parameter to the constructor is deliberate the conversion of string to
+// parameter to the constructor is deliberate. The conversion of string to
 // ColumnType will be handled at a higher level i.e Seperation of Concerns
 
 class Column {
