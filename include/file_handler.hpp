@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <ios>
+#include <memory>
 #include <string>
 
 // Custom return types for easier error handling
@@ -16,7 +17,7 @@ class fileHandler {
                 if(std::filesystem::exists(path)){
                         return Err("File already exists");
                 }
-                std::fstream file=std::fstream(path,std::ios::in | std::ios::out);
+                std::fstream file=std::fstream(path,std::ios::out);
                 if(!file.is_open()){
                         return Err("Error opening file");
                 }
@@ -24,12 +25,14 @@ class fileHandler {
                 return {};
         }
 
-        Res<std::fstream> openMetaFile(std::filesystem::path path) {
-                std::fstream file;
-                file.open(path, std::ios::in | std::ios::out | std::ios::app);
-                if(!file.is_open()){
+        Res<std::unique_ptr<std::fstream>> openMetaFile(std::filesystem::path path) {
+                if(!std::filesystem::exists(path)){
+                        return Err("File does not exists");
+                }
+                auto file = std::make_unique<std::fstream>(path,std::ios::in | std::ios::out);
+                if(!file->is_open()){
                         return Err("Cannot open file");
                 }
-                return std::move(file);
+                return file;
         }
 };
