@@ -13,7 +13,8 @@ using Err = std::unexpected<std::string>;
 
 class fileHandler {
       public:
-        Res<void> createFile(std::filesystem::path path) {
+        Res<void> createMetaFile(const std::string& name) {
+                std::filesystem::path path = std::filesystem::path("data") / "tables" / (name + ".meta");
                 if(std::filesystem::exists(path)){
                         return Err("File already exists");
                 }
@@ -25,7 +26,8 @@ class fileHandler {
                 return {};
         }
 
-        Res<std::unique_ptr<std::fstream>> openMetaFile(std::filesystem::path path) {
+        Res<std::unique_ptr<std::fstream>> openMetaFile(const std::string& name) {
+                std::filesystem::path path = std::filesystem::path("data") / "tables" / (name + ".meta");
                 if(!std::filesystem::exists(path)){
                         return Err("File does not exists");
                 }
