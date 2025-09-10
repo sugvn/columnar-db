@@ -15,4 +15,5 @@ class StorageEngine {
 	public:
 	Res<void> createTable(
 		std::string name, const std::vector<Column> &columns);
+    Res<void> InsertTable(std::string name,vector<std::string> values);
 };

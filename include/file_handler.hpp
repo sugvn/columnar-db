@@ -37,4 +37,10 @@ class fileHandler {
                 }
                 return file;
         }
+
+
+
+        Res<std::unique_ptr<std::fstream>> createColumnFile(const std::string& name){
+
+        }
 };
